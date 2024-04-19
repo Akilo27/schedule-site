@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div style="width: 280px;">
+            {% include 'includes/sidebar.html' %}
+        </div>
+        <div class="col-md-9">
+            <div class="container">
+
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <div class="text-center mb-4">
+                            <h1>Настройте свой профиль</h1>
+                        </div>
+                        <div class="container" style="margin-left: 30px;">
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="last_name">Фамилия</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name"
+                                           placeholder="Фамилия" maxlength="35" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="first_name">Имя</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name"
+                                           placeholder="Имя" maxlength="35" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="surname">Отчество</label>
+                                    <input type="text" class="form-control" id="surname" name="surname"
+                                           placeholder="Отчество" maxlength="35">
+                                </div>
+                                <div class="form-group">
+                                    <label for="department">Кафедра</label>
+                                    <select class="form-control" name="department" id="department" required>
+                                        {% for department in all_department %}
+                                        <option value="{{ department.name }}">{{ department.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="course">Курс</label>
+                                    <select class="form-control" name="course" id="course" required>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="group">Выберите группу:</label>
+                                    <select class="form-control" name="group" id="group" required>
+                                        {% for group in all_groups %}
+                                        <option value="{{ group.name }}">{{ group.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Сохранить</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

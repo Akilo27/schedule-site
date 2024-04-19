@@ -1,0 +1,20 @@
+{% extends 'auth/base.html' %}
+{% load socialaccount %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- Ваш элемент --><h1>Login</h1>
+        <!-- Google Sign-In button -->
+        {% providers_media_js %}
+        <br>
+        <a href="{% provider_login_url 'google' %}" class="btn btn-danger">
+            <i class="fab fa-google"></i> Sign in with Google
+        </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

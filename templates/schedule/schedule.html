@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Расписание{% endblock %}
+{% block content %}
+<div class="container-fluid p-0 m-0">
+    <div class="row p-0 m-0">
+        <div class="col-md-3 p-0 m-0">
+            {% include 'includes/sidebar.html' %}
+        </div>
+        <div class="col-md-8 p-0 m-0">
+            <h1 class="text-center">Расписание</h1>
+            <hr>
+            <h3>Фильтрация по занятиям</h3>
+
+            <div class="col-md-8 p-0 m-0">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="text-center">
+                        <label for="period_id">Период:</label>
+                        <select class="form-control" id="period_id" name="period_id">
+                            <option value="1">Расписание 1-го семестра 2023-2024 года</option>
+                            <option value="2">Расписание 2-го семестра 2023-2024 года</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <label for="group_id">Группа:</label>
+                            <select class="form-control" id="group_id" name="group_id">
+                                {% for group in groups %}
+                                <option value="{{ group.id }}">{{ group.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="teacher_id">Преподаватель:</label>
+                            <select class="form-control" id="teacher_id" name="teacher_id">
+                                {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">{{ teacher.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Фильтровать</button>
+                    </div>
+                </form>
+            </div>
+
+            <br>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Неделя</th>
+                        <th>Час</th>
+                        <th>Предмет</th>
+                        <th>Преподаватель</th>
+                        <th>Аудитория</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for lesson in lessons %}
+                    <tr>
+                        <td>{{ lesson.get_week_display }}</td>
+                        <td>{{ lesson.get_period_display }}</td>
+                        <td>{{ lesson.subject }}</td>
+                        <td>{{ lesson.teacher }}</td>
+                        <td>{{ lesson.audience }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
