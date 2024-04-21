@@ -1,8 +1,11 @@
 import os
+from logging import root
 
 import requests
 from bs4 import BeautifulSoup
 import lxml
+
+from config.settings import PATH_TO_DOWNLOAD
 
 URL = 'https://volpi.ru/timetable'
 
@@ -29,7 +32,7 @@ def get_links():
             links = element.find_all('a', href=True)
             # Добавляем найденные ссылки в список all_links
             for link in links:
-                all_links.append('volpi.ru' + link['href'])
+                all_links.append('https://volpi.ru' + link['href'])
 
     all_links = list(set(all_links))
     return all_links
@@ -38,9 +41,13 @@ def get_links():
 def download_pdf(links: list[str]):
     for link in links:
         r = requests.get(link)
-        filename = link.split('/')[-1]
-        with open(f'static/schedule/schedule_pdf/{filename}.pdf', 'wb') as f:
+        filename = f'schedule-{link.split("/")[-1]}'
+        with open(
+                f'{PATH_TO_DOWNLOAD}\{filename}',
+                'wb'
+        ) as f:
             f.write(r.content)
-    print('OK')
+    print('Successfully downloaded')
+
 
 download_pdf(get_links())

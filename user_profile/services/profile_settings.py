@@ -19,7 +19,7 @@ def convert_department_name_to_department_id(department_name: str) -> int:
 def set_student_settings(user_id: int, first_name: str, last_name: str,
                          surname: str, department: str, course: str, group_name: str) \
         -> None:
-    """Метод устанавливает группу у студента.
+    """Метод устанавливает настройки у студента.
 
         Аргументы:
          • user_id - id авторизованного пользователя.

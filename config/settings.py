@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+# Установочный путь для файлов расписания pdf
+PATH_TO_DOWNLOAD = 'D:\PythonProjects\schedule-site-order\schedule_files'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -132,7 +135,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = '/user_profile/'
-LOGOUT_REDIRECT_URL = 'account_login'
+LOGOUT_REDIRECT_URL = '/user_profile/'
 # -----------------------end Authorization region-------------------------------
 
 # Internationalization

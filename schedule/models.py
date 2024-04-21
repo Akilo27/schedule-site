@@ -5,6 +5,11 @@ from django.utils.translation import gettext_lazy
 
 
 class Subject(models.Model):
+    """Модель учебного предмета.
+
+    Атрибуты:
+        • name (str): Название учебного предмета.
+    """
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -16,8 +21,14 @@ class Subject(models.Model):
 
 
 class Department(models.Model):
+    """Модель отдела.
+
+    Атрибуты:
+        • name (str): Название кафедры.
+        • subjects (ManyToManyField): Связь многие ко многим с предметами.
+    """
     name = models.CharField(max_length=50)
-    subjects = models.ManyToManyField('Subject', related_name='groups')
+    subjects = models.ManyToManyField('Subject', related_name='department')
 
     def __str__(self):
         return self.name
@@ -28,6 +39,11 @@ class Department(models.Model):
 
 
 class Group(models.Model):
+    """Модель группы.
+
+    Атрибуты:
+        • name (str): Название группы.
+    """
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -39,7 +55,14 @@ class Group(models.Model):
 
 
 class Student(AbstractUser):
-    # Добавьте свои дополнительные поля
+    """Модель студента.
+
+    Атрибуты:
+        • surname (str): Фамилия студента.
+        • group (ForeignKey): Связь с моделью Группа.
+        • department (ForeignKey): Связь с моделью Кафедра.
+        • course (int): Курс студента.
+    """
     surname = models.CharField(max_length=50, blank=True)
     group = models.ForeignKey(
         'Group', on_delete=models.CASCADE, related_name='student',
@@ -52,6 +75,7 @@ class Student(AbstractUser):
     course = models.IntegerField(null=True, blank=True)
 
     def get_avatar(self):
+        """Метод для получения URL аватара студента."""
         avatar_url = SocialAccount.objects.filter(user=self).get().extra_data[
             'picture']
         return avatar_url
@@ -65,6 +89,14 @@ class Student(AbstractUser):
 
 
 class Teacher(models.Model):
+    """Модель учителя.
+
+    Атрибуты:
+        • first_name (str): Имя учителя.
+        • last_name (str): Фамилия учителя.
+        • surname (str): Отчество учителя.
+        • subjects (ForeignKey): Связь с моделью Предмет.
+    """
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
@@ -83,6 +115,17 @@ class Teacher(models.Model):
 
 
 class Lesson(models.Model):
+    """Модель урока.
+
+    Атрибуты:
+        • week (str): Неделя(четная или нечетная).
+        • group (ForeignKey): Связь с моделью Группа.
+        • period (str): На каком часу проходит урок.
+        • teacher (ForeignKey): Учитель, который проводит урок.
+        • day (str): День недели, в который запланирован урок.
+        • audience (str): Номер аудитории, где проходит урок.
+        • subject (ForeignKey): Предмет урока.
+    """
     class WeekChoice(models.TextChoices):
         FIRST_WEEK = 'FW', gettext_lazy('Первая')
         SECOND_WEEK = 'SW', gettext_lazy('Вторая')
@@ -95,6 +138,14 @@ class Lesson(models.Model):
         FIFTH_PERIOD = 'FF', gettext_lazy('9-10')
         SIXTH_PERIOD = 'SX', gettext_lazy('11-12')
 
+    class DayChoice(models.TextChoices):
+        MONDAY = 'MN', gettext_lazy('Понедельник')
+        TUESDAY = 'TU', gettext_lazy('Вторник')
+        WEDNESDAY = 'WD', gettext_lazy('Среда')
+        THURSDAY = 'TH', gettext_lazy('Четверг')
+        FRIDAY = 'FR', gettext_lazy('Пятница')
+        SATURDAY = 'ST', gettext_lazy('Суббота')
+
     week = models.CharField(max_length=7, choices=WeekChoice.choices)
     group = models.ForeignKey('Group', on_delete=models.CASCADE, related_name='lesson')
     period = models.CharField(choices=DoublePeriodChoice.choices, max_length=5)
@@ -102,8 +153,8 @@ class Lesson(models.Model):
         'Teacher', on_delete=models.CASCADE,
         related_name='lesson'
     )
+    day = models.CharField(choices=DayChoice.choices, max_length=5)
     audience = models.CharField(max_length=5)
-    date = models.DateField(null=True, blank=True)
     subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
 
     def __str__(self):

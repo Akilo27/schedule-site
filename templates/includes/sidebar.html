@@ -9,27 +9,33 @@
         <svg class="bi me-2" width="40" height="32">
             <use xlink:href="#bootstrap"></use>
         </svg>
-        <span class="fs-4" style="font-size: 20px;">Администрирование</span>
+        <span class="fs-4" style="font-size: 20px; margin-right: 35px;">Администрирование</span>
     </a>
     <hr style="color: white;"/>
-    <div class="dropdown">
+    <div class="dropdown" style="margin-left: 10px;">
         <a href="{% url 'profile_settings' %}"
            class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.is_authenticated %}
             <img src="{{ user.get_avatar }}" alt="" width="32" height="32" class="rounded-circle me-2"
                  style="margin-right:10px;">
-            {% if request.user.is_authenticated %}
-                 <strong>{{ user.username }}</strong>
+            <strong>{{ user.username }}</strong>
             {% else %}
-                Гость
+            <img src="https://e7.pngegg.com/pngimages/109/994/png-clipart-teacher-student-college-school-education-avatars-child-face.png"
+                 alt="" width="32" height="32" class="rounded-circle me-2"
+                 style="margin-right:10px;">
+            <strong>Гость</strong>
             {% endif %}
 
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="{% url 'profile_settings' %}">Settings</a></li>
+            {% if not request.user.is_authenticated %}
+            <li><a class="dropdown-item" href="{% url 'account_login' %}">Авторизация</a></li>
             <li>
                 <hr class="dropdown-divider">
             </li>
+            {% endif %}
+            <li><a class="dropdown-item" href="{% url 'profile_settings' %}">Настройки</a></li>
         </ul>
     </div>
     <hr>
@@ -52,7 +58,9 @@
         </li>
     </ul>
     <hr>
-    <div class="container-fluid p-6 m-7">
-
+    <div class="text-center">
+        <a href="{% url 'account_logout' %}">
+            <button class="btn btn-danger">Выйти с аккаунта</button>
+        </a>
     </div>
 </div>
