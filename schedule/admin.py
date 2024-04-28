@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from django.contrib import admin
 
-from schedule.models import Group, Student, Subject, Department, Teacher, Lesson
+from schedule.models import Group, Student, Subject, Department, Teacher, Lesson,Schedule
 
 
 # Register your models here.
@@ -63,7 +63,9 @@ class LessonAdmin(admin.ModelAdmin):
 
         df.to_csv(file_path, index=False)
 
-
+@admin.register(Schedule)
+class LessonAdmin(admin.ModelAdmin):
+    pass
 
 
 
