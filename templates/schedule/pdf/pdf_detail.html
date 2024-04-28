@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Выбранное расписание{% endblock %}
+{% block content %}
+
+<div class="container-fluid p-0 m-0">
+  <div class="row p-0 m-0">
+    <div class="col-md-3 p-0 m-0">
+      {% include 'includes/sidebar.html' %}
+    </div>
+    <div class="col-md-8 p-0 m-0">
+      <div>
+        <embed src="/{{ pdf }}" width="100%" height="600px" type='application/pdf'>
+      </div>
+      <div class="container">
+        <input id="filterInput" type="text" placeholder="Фильтр по ФИО...">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Неделя</th>
+              <th>Группа</th>
+              <th>Период</th>
+              <th>ФИО учителя</th>
+              <th>День</th>
+              <th>Аудитория</th>
+              <th>Предмет</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lesson in crud %}
+            <tr>
+              {% for value in lesson %}
+              <td>{{ value }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+  </div>
+</div>
+</div>
+
+
+<script>
+  const input = document.getElementById('filterInput');
+
+// Находим таблицу и строки с данными
+const table = document.querySelector('.table');
+const rows = table.getElementsByTagName('tr');
+
+// Обработчик события на изменение в поле ввода
+input.addEventListener('input', function() {
+    // Приводим введенный текст к нижнему регистру для удобства сравнения
+    const filterValue = input.value.toLowerCase();
+
+    // Проходим по каждой строке в таблице, начиная со второй строки (первая строка - заголовок)
+    for (let i = 1; i < rows.length; i++) {
+        let row = rows[i];
+        // Находим ячейку с ФИО
+        let nameCell = row.getElementsByTagName('td')[3];
+
+        // Приводим текст из ячейки к нижнему регистру
+        let nameValue = nameCell.textContent.toLowerCase();
+
+        // Проверяем, содержит ли значение из ячейки введенный текст. Если да, показываем строку, если нет - скрываем
+        if (nameValue.includes(filterValue)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    }
+});
+</script>
+{% endblock %}

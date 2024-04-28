@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавление файла{% endblock %}
+{% block content %}
+<div class="container-fluid p-0 m-0">
+    <div class="row p-0 m-0">
+        <div class="col-md-3 p-0 m-0">
+            {% include 'includes/sidebar.html' %}
+        </div>
+        <div class="col-md-8 p-0 m-0">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Загрузить</button>
+        </form>
+
+{{ data|safe }}
+        </div>
+    </div>
+</div>
+
+{{data}}
+{% endblock %}

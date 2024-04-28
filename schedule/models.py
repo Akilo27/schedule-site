@@ -97,9 +97,9 @@ class Teacher(models.Model):
         • surname (str): Отчество учителя.
         • subjects (ForeignKey): Связь с моделью Предмет.
     """
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50,blank=True)
+    last_name = models.CharField(max_length=50,blank=True)
+    surname = models.CharField(max_length=50,blank=True)
     subjects = models.ForeignKey(
         to='Subject',
         on_delete=models.CASCADE,
@@ -127,8 +127,8 @@ class Lesson(models.Model):
         • subject (ForeignKey): Предмет урока.
     """
     class WeekChoice(models.TextChoices):
-        FIRST_WEEK = 'FW', gettext_lazy('Первая')
-        SECOND_WEEK = 'SW', gettext_lazy('Вторая')
+        FIRST_WEEK = 'FIRST_WEEK', gettext_lazy('ПЕРВАЯ')
+        SECOND_WEEK = 'SECOND_WEEK', gettext_lazy('ВТОРАЯ')
 
     class DoublePeriodChoice(models.TextChoices):
         FIRST_PERIOD = 'FP', gettext_lazy('1-2')
@@ -146,16 +146,18 @@ class Lesson(models.Model):
         FRIDAY = 'FR', gettext_lazy('Пятница')
         SATURDAY = 'ST', gettext_lazy('Суббота')
 
-    week = models.CharField(max_length=7, choices=WeekChoice.choices)
-    group = models.ForeignKey('Group', on_delete=models.CASCADE, related_name='lesson')
-    period = models.CharField(choices=DoublePeriodChoice.choices, max_length=5)
+    week = models.CharField(max_length=11, choices=WeekChoice.choices, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='lesson', blank=True)
+    period = models.CharField(choices=DoublePeriodChoice.choices, max_length=5, blank=True)
     teacher = models.ForeignKey(
-        'Teacher', on_delete=models.CASCADE,
-        related_name='lesson'
+        Teacher, on_delete=models.CASCADE,
+        related_name='lesson', blank=True
     )
-    day = models.CharField(choices=DayChoice.choices, max_length=5)
-    audience = models.CharField(max_length=5)
-    subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
+    day = models.CharField(choices=DayChoice.choices, max_length=5, blank=True)
+    audience = models.CharField(max_length=5, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, blank=True)
+    pdf_file = models.FileField(upload_to="upload_file/")
+    crud_file = models.FileField(upload_to='tables', blank=True)
 
     def __str__(self):
         return self.subject.name
@@ -163,3 +165,9 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
+
+
+class Schedule(models.Model):
+    pdf_file = models.FileField(upload_to='upload_file')
+
+
